@@ -26,7 +26,7 @@ func HashContent(content []byte) (cidStr string, hash []byte, hashes [][]byte, e
 
 	hash = merkleHasher.Sum(nil)
 
-	b := CalBytesFromLength(uint64(len(content)))
+	b := calBytesFromLength(uint64(len(content)))
 	hash = append(hash, b...)
 	prefix := gocid.Prefix{
 		Version:  1,                           // Usually '1'.
@@ -77,7 +77,7 @@ func GetCidFromHashes(hashes [][]byte, size int) (string, error) {
 
 	hash := merkleHasher.Sum(nil)
 
-	b := CalBytesFromLength(uint64(size))
+	b := calBytesFromLength(uint64(size))
 
 	hash = append(hash, b...)
 	prefix := gocid.Prefix{
@@ -104,10 +104,10 @@ func GetDataLengthFromCid(cid []byte) (uint64, error) {
 
 	sizeBytes := cid[preLen+32:]
 
-	return CalLengthFromBytes(sizeBytes), nil
+	return calLengthFromBytes(sizeBytes), nil
 }
 
-func CalBytesFromLength(l uint64) []byte {
+func calBytesFromLength(l uint64) []byte {
 	size := calLength(l)
 	bytes := make([]byte, size)
 	for i := 0; i < size; i++ {
@@ -116,7 +116,7 @@ func CalBytesFromLength(l uint64) []byte {
 	return bytes
 }
 
-func CalLengthFromBytes(b []byte) uint64 {
+func calLengthFromBytes(b []byte) uint64 {
 	size := len(b)
 	l := uint64(0)
 	for i := 0; i < size; i++ {
