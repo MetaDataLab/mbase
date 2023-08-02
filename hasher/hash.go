@@ -44,6 +44,12 @@ func HashContent(content []byte) (cidStr string, hashes [][]byte, err error) {
 	return
 }
 
+func Hash(content []byte) []byte {
+	h := sha3.NewLegacyKeccak256()
+	h.Write(content)
+	return h.Sum(nil)
+}
+
 func GetDataLengthFromCid(cid []byte) (uint64, error) {
 	prefix, err := gocid.PrefixFromBytes(cid)
 	if err != nil {
