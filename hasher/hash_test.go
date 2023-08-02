@@ -75,3 +75,28 @@ func TestGetDataLengthFromCid(t *testing.T) {
 		t.Errorf("l %d != size %d", l, size)
 	}
 }
+
+func TestHashes(t *testing.T) {
+
+	data := make([]byte, 0)
+	for i := 0; i < 127*1024; i++ {
+		data = append(data, 'a')
+	}
+	for i := 0; i < 1025; i++ {
+		data = append(data, 'b')
+	}
+
+	hash0 := []byte{51, 122, 33, 203, 126, 184, 158, 214, 27, 236, 117, 181, 214, 250, 209, 27, 68, 104, 132, 173, 64, 186, 164, 66, 96, 5, 63, 219, 191, 23, 246, 58}
+	hash1 := []byte{181, 85, 61, 227, 21, 224, 237, 245, 4, 217, 21, 10, 248, 45, 175, 165, 196, 102, 127, 166, 24, 237, 10, 111, 25, 198, 155, 65, 22, 108, 85, 16}
+	hashes := make([][]byte, 0)
+	hashes = append(hashes, hash0)
+	hashes = append(hashes, hash1)
+
+	hs := Hashes(data)
+
+	for i := 0; i < len(hashes); i++ {
+		if !bytes.Equal(hashes[i], hs[i]) {
+			t.Errorf("hashes[%d] %s != hs[%d] %s", i, hashes[i], i, hs[i])
+		}
+	}
+}

@@ -48,6 +48,19 @@ func Hash(content []byte) []byte {
 	return h.Sum(nil)
 }
 
+func Hashes(content []byte) (hashes [][]byte) {
+	for i := 0; i < len(content); i += CHUNK_SIZE {
+		end := i + CHUNK_SIZE
+		if end > len(content) {
+			end = len(content)
+		}
+		hashVal := Hash(content[i:end])
+		hashes = append(hashes, hashVal)
+	}
+
+	return
+}
+
 func GetCidFromHashes(hashes [][]byte, size int) (string, error) {
 	hl := len(hashes)
 	// 0 < size && 0 < len(hashes)
