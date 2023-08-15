@@ -7,7 +7,7 @@ import (
 
 func TestGetCidFromHashes(t *testing.T) {
 	size := 127*1024 + 1025
-	cid := "bafk5sbbdnhnyy4iwzatcfvr3yteddvjx26twcgasybb3j37vx3ishpqeqsdacaac"
+	cid := "bafk5sbbdv6ff5evom74oaepgwvvmskovoarzere35imcurv4f2bo5vnk5sqqcaac"
 
 	hash0 := []byte{51, 122, 33, 203, 126, 184, 158, 214, 27, 236, 117, 181, 214, 250, 209, 27, 68, 104, 132, 173, 64, 186, 164, 66, 96, 5, 63, 219, 191, 23, 246, 58}
 	hash1 := []byte{181, 85, 61, 227, 21, 224, 237, 245, 4, 217, 21, 10, 248, 45, 175, 165, 196, 102, 127, 166, 24, 237, 10, 111, 25, 198, 155, 65, 22, 108, 85, 16}
@@ -35,8 +35,8 @@ func TestHashContent(t *testing.T) {
 		data = append(data, 'b')
 	}
 
-	cid := "bafk5sbbdnhnyy4iwzatcfvr3yteddvjx26twcgasybb3j37vx3ishpqeqsdacaac"
-	rootHash := []byte{105, 219, 140, 113, 22, 200, 38, 34, 214, 59, 196, 200, 49, 213, 55, 215, 167, 97, 24, 18, 192, 67, 180, 239, 245, 190, 209, 35, 190, 4, 132, 134, 1, 0, 2}
+	cid := "bafk5sbbdv6ff5evom74oaepgwvvmskovoarzere35imcurv4f2bo5vnk5sqqcaac"
+	rootHash := []byte{175, 138, 94, 146, 174, 103, 248, 224, 17, 230, 181, 106, 201, 41, 213, 112, 35, 146, 68, 155, 234, 24, 42, 70, 188, 46, 130, 238, 213, 170, 236, 161, 1, 0, 2}
 	hash0 := []byte{51, 122, 33, 203, 126, 184, 158, 214, 27, 236, 117, 181, 214, 250, 209, 27, 68, 104, 132, 173, 64, 186, 164, 66, 96, 5, 63, 219, 191, 23, 246, 58}
 	hash1 := []byte{181, 85, 61, 227, 21, 224, 237, 245, 4, 217, 21, 10, 248, 45, 175, 165, 196, 102, 127, 166, 24, 237, 10, 111, 25, 198, 155, 65, 22, 108, 85, 16}
 	hashes := make([][]byte, 0)

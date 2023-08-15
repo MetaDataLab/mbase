@@ -3,15 +3,16 @@ package hasher
 import (
 	"fmt"
 
+	merkletree "github.com/MetaDataLab/go-merkletree"
 	gocid "github.com/ipfs/go-cid"
-	"golang.org/x/crypto/sha3"
 )
 
 const CHUNK_SIZE = 128 * 1024 //128KiB
+const HashCode = merkletree.KECCAK256
+const META_STORE_MERKLE_TREE_HASH uint64 = 600 + 1
 
 func HashContent(content []byte) (cidStr string, hash []byte, hashes [][]byte, err error) {
-	hashes = make([][]byte, 0)
-	merkleHasher := MerkleTreeHash{}
+	data := [][]byte{}
 
 	chunkSize := CHUNK_SIZE
 	for i := 0; i < len(content); i += chunkSize {
@@ -19,15 +20,27 @@ func HashContent(content []byte) (cidStr string, hash []byte, hashes [][]byte, e
 		if end > len(content) {
 			end = len(content)
 		}
-		hashVal := Hash(content[i:end])
-		hashes = append(hashes, hashVal)
-		merkleHasher.Write(hashVal)
+		data = append(data, content[i:end])
 	}
 
-	hash = merkleHasher.Sum(nil)
+	hashType, err := merkletree.GetHashTypeFromCode(HashCode)
+	if err != nil {
+		return
+	}
+
+	tree, err := merkletree.NewTree(
+		merkletree.WithData(data),
+		merkletree.WithHashType(hashType),
+	)
+	if err != nil {
+		return
+	}
+	hash = tree.Root()
+	hashes = tree.LeavesNodes()
 
 	b := calBytesFromLength(uint64(len(content)))
 	hash = append(hash, b...)
+
 	prefix := gocid.Prefix{
 		Version:  1,                           // Usually '1'.
 		Codec:    0x55,                        // 0x55 means "raw binary"
@@ -43,18 +56,22 @@ func HashContent(content []byte) (cidStr string, hash []byte, hashes [][]byte, e
 }
 
 func Hash(content []byte) []byte {
-	h := sha3.NewLegacyKeccak256()
-	h.Write(content)
-	return h.Sum(nil)
+	h, _ := merkletree.GetHashTypeFromCode(HashCode)
+	return h.Hash(content)
 }
 
 func Hashes(content []byte) (hashes [][]byte) {
+	hashType, err := merkletree.GetHashTypeFromCode(HashCode)
+	if err != nil {
+		return
+	}
+
 	for i := 0; i < len(content); i += CHUNK_SIZE {
 		end := i + CHUNK_SIZE
 		if end > len(content) {
 			end = len(content)
 		}
-		hashVal := Hash(content[i:end])
+		hashVal := hashType.Hash(content[i:end])
 		hashes = append(hashes, hashVal)
 	}
 
@@ -82,13 +99,13 @@ func GetCidFromHashes(hashes [][]byte, size int) (string, error) {
 		}
 	}
 
-	merkleHasher := MerkleTreeHash{}
-	for i := 0; i < len(hashes); i++ {
-		hashVal := hashes[i]
-		merkleHasher.Write(hashVal)
-	}
+	h, _ := merkletree.GetHashTypeFromCode(HashCode)
 
-	hash := merkleHasher.Sum(nil)
+	tree, err := merkletree.NewTreeWithLeavesHashes(hashes, h)
+	if err != nil {
+		return "", err
+	}
+	hash := tree.Root()
 
 	b := calBytesFromLength(uint64(size))
 
