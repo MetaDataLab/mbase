@@ -78,6 +78,52 @@ func Hashes(content []byte) (hashes [][]byte) {
 	return
 }
 
+func HashHashes(hashes [][]byte, size int) (cidStr string, hash []byte, err error) {
+	hl := len(hashes)
+	// 0 < size && 0 < len(hashes)
+	if !(0 < size) {
+		return "", nil, fmt.Errorf("size[%d] must be greater than 0", size)
+	}
+	if !(0 < hl) {
+		return "", nil, fmt.Errorf("len(hashes)[%d] must be greater than 0", len(hashes))
+	}
+	if !((hl-1)*CHUNK_SIZE < size && size <= hl*CHUNK_SIZE) {
+		return "", nil, fmt.Errorf("len(hashes)[%d] and size[%d] not match", len(hashes), size)
+	}
+
+	for i := 0; i < len(hashes); i++ {
+		hashVal := hashes[i]
+		if len(hashVal) != 32 {
+			return "", nil, fmt.Errorf("hashes[%d] length must be 32", len(hashVal))
+		}
+	}
+
+	h, _ := merkletree.GetHashTypeFromCode(HashCode)
+
+	tree, err := merkletree.NewTreeWithLeavesHashes(hashes, h)
+	if err != nil {
+		return "", nil, err
+	}
+	hash = tree.Root()
+
+	b := calBytesFromLength(uint64(size))
+
+	hash = append(hash, b...)
+	prefix := gocid.Prefix{
+		Version:  1,                           // Usually '1'.
+		Codec:    0x55,                        // 0x55 means "raw binary"
+		MhType:   META_STORE_MERKLE_TREE_HASH, // use merkle tree to generate data hash
+		MhLength: 32 + len(b),                 // pad file size
+	}
+	cid, err := gocid.Parse(append(prefix.Bytes(), hash...))
+	if err != nil {
+		return "", nil, err
+	}
+	cidStr = cid.String()
+	return
+}
+
+// deprecated, use HashHashes instead
 func GetCidFromHashes(hashes [][]byte, size int) (string, error) {
 	hl := len(hashes)
 	// 0 < size && 0 < len(hashes)

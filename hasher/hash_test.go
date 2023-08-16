@@ -25,6 +25,31 @@ func TestGetCidFromHashes(t *testing.T) {
 	}
 }
 
+func TestHashHashes(t *testing.T) {
+	size := 127*1024 + 1025
+	cid := "bafk5sbbdv6ff5evom74oaepgwvvmskovoarzere35imcurv4f2bo5vnk5sqqcaac"
+	rootHash := []byte{175, 138, 94, 146, 174, 103, 248, 224, 17, 230, 181, 106, 201, 41, 213, 112, 35, 146, 68, 155, 234, 24, 42, 70, 188, 46, 130, 238, 213, 170, 236, 161, 1, 0, 2}
+
+	hash0 := []byte{51, 122, 33, 203, 126, 184, 158, 214, 27, 236, 117, 181, 214, 250, 209, 27, 68, 104, 132, 173, 64, 186, 164, 66, 96, 5, 63, 219, 191, 23, 246, 58}
+	hash1 := []byte{181, 85, 61, 227, 21, 224, 237, 245, 4, 217, 21, 10, 248, 45, 175, 165, 196, 102, 127, 166, 24, 237, 10, 111, 25, 198, 155, 65, 22, 108, 85, 16}
+	hashes := make([][]byte, 0)
+	hashes = append(hashes, hash0)
+	hashes = append(hashes, hash1)
+
+	c, r, err := HashHashes(hashes, size)
+	if err != nil {
+		t.Errorf("HashHashes error: %s", err.Error())
+	}
+
+	if cid != c {
+		t.Errorf("cid not match")
+	}
+
+	if !bytes.Equal(rootHash, r) {
+		t.Errorf("rootHash and r not the same, rootHash %v, r %v", rootHash, r)
+	}
+}
+
 func TestHashContent(t *testing.T) {
 
 	data := make([]byte, 0)
@@ -49,7 +74,7 @@ func TestHashContent(t *testing.T) {
 	}
 
 	if !bytes.Equal(rootHash, r) {
-		t.Errorf("rootHash and not the same, rootHash %v, r %v", rootHash, r)
+		t.Errorf("rootHash and r not the same, rootHash %v, r %v", rootHash, r)
 	}
 
 	if len(hs) != len(hashes) {
