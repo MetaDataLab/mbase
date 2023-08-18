@@ -1,5 +1,5 @@
-github.com/MetaDataLab/go-merkletree v1.0.3 h1:dwQx6zFYV/fTmv+wLrNRsySsRwGFqZUhn06qVaxcHNY=
-github.com/MetaDataLab/go-merkletree v1.0.3/go.mod h1:ajvB2aqpgR7rg4Er8oxo9udw4hQhrijcQ2GZXc/2biU=
+github.com/MetaDataLab/go-merkletree v1.0.3-alpha.2 h1:ijVQiVhDOLw9SdSI0+njDUUo55gJSPMi6V3QyWLF5NI=
+github.com/MetaDataLab/go-merkletree v1.0.3-alpha.2/go.mod h1:ajvB2aqpgR7rg4Er8oxo9udw4hQhrijcQ2GZXc/2biU=
 github.com/davecgh/go-spew v1.1.0 h1:ZDRjVQ15GmhC3fiQ8ni8+OwkZQO4DARzQgrnXU1Liz8=
 github.com/ipfs/go-cid v0.4.1 h1:A/T3qGvxi4kpKWWcPC/PgbvDA2bjVLO7n4UeVwnbs/s=
 github.com/ipfs/go-cid v0.4.1/go.mod h1:uQHwDeX4c6CtyrFwdqyhpNcxVewur1M7l7fNU7LKwZk=

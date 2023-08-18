@@ -3,7 +3,7 @@ module github.com/MetaDataLab/mbase
 go 1.20
 
 require (
-	github.com/MetaDataLab/go-merkletree v1.0.3
+	github.com/MetaDataLab/go-merkletree v1.0.3-alpha.2
 	github.com/ipfs/go-cid v0.4.1
 )
 
